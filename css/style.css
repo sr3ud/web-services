@@ -1,0 +1,23 @@
+body {
+    margin-top: 50px;
+}
+.about{
+    min-height: 0x;
+    max-height: 420px;
+}
+.jumbotron img {
+    width: 15%;
+}
+
+.social .contact {
+    min-height: 420px;
+}
+
+footer {
+    min-height: 50px;
+    padding-top:12px;
+}
+
+
+
+
