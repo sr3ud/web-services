@@ -21,6 +21,46 @@ $result= get_CURL($latestvideo);
 $latestvideoid = $result['items'][0]['id']['videoId'];
 ?>
 
+<?php
+function get_GithubProfile($url)
+{
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($curl, CURLOPT_USERAGENT, 'PHP-App'); 
+  $result = curl_exec($curl);
+  curl_close($curl);
+
+  return json_decode($result, true);
+}
+
+$githubProfile = 'sr3ud'; 
+$githubUserUrl = 'https://api.github.com/users/' . $githubProfile;
+$githubRepoUrl = 'https://api.github.com/users/' . $githubProfile . '/repos?sort=created&per_page=1';
+
+
+$profileData = get_GithubProfile($githubUserUrl);
+$reposData = get_GithubProfile($githubRepoUrl);
+
+if (isset($profileData['avatar_url'])) {
+    $profileImageUrl = $profileData['avatar_url']; 
+    $profileName = $profileData['name'] ?? $githubProfile; 
+} else {
+    $profileImageUrl = 'img/default-avatar.png'; 
+    $profileName = 'User'; 
+}
+
+//latestrepo
+if (isset($reposData[0])) {
+    $latestRepoName = $reposData[0]['name'];
+    $latestRepoUrl = $reposData[0]['html_url'];
+} else {
+    $latestRepoName = 'No repositories found';
+    $latestRepoUrl = '#';
+}
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -123,62 +163,100 @@ $latestvideoid = $result['items'][0]['id']['videoId'];
     </section>
 
     
-    <!--sosmed -->
-    <section class="social" id="social">
-      <div class="container">
-        <div class="row pt-4 mb-4">
-          <div class="col text-center">
-            <h2>Social Media</h2>
+<!-- sosmed -->
+<section class="social" id="social">
+  <div class="container">
+    <div class="row pt-4 mb-4">
+      <div class="col text-center">
+        <h2>Social Media</h2>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <!-- yt -->
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="<?=$youtubeprofilepic; ?>" class="rounded-circle img-thumbnail" width="200">
+          </div>
+          <div class="col-md-8">
+            <h5><?=$channel;?></h5>
+            <p><?=$subs;?> Subs</p>
+            <div class="g-ytsubscribe" data-channelid="UCsvZoXHmXcAczVkV4E4dM0w" data-layout="default" data-theme="dark" data-count="default"></div>
           </div>
         </div>
-        <div class="row justify-content-center">
-          <div class="col md-5">
-            <div class="row">
-              <div class="col-md-4">
-                <img src="<?=$youtubeprofilepic; ?>" class="rounded-circle img-thumbnail" width="200">
-              </div>
-              <div class="col-md-8">
-                <h5><?=$channel;?></h5>
-                <p><?=$subs;?> Subs</p>
-                <div class="g-ytsubscribe" data-channelid="UCsvZoXHmXcAczVkV4E4dM0w" data-layout="default" data-theme="dark" data-count="default"></div>
-              </div>
-            </div>
-            <div class="row mt-3 pb-3">
-              <div class="col">
-                  <div class="ratio ratio-16x9">
-                  <iframe src="https://www.youtube.com/embed/<?=$latestvideoid?>?rel=0" title="YouTube video" allowfullscreen></iframe>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col md-5">
-            <div class="row">
-              <div class="col-md-4">
-              <img src="img/saya.png" class="rounded-circle img-thumbnail" width="200">
-              </div>
-                <div class="col-md-8">
-                  <h5>Instagram</h5>
-                  <h5>@harisluthfann</h5>
-                  <p>250 Followers</p>
-                </div>
-            </div>
-            <div class="row mt-3 pb-3">
-              <div class="col">
-                <div class="ig-thumbnail">
-                  <img src="img/ig1.png" style="width: 150px; height: 150px; object-fit: cover; float: left;">
-                </div>
-                <div class="ig-thumbnail">
-                  <img src="img/ig2.png" style="width: 150px; height: 150px; object-fit: cover; float: left;">
-                </div>
-                <div class="ig-thumbnail">
-                  <img src="img/ig3.png" style="width: 150px; height: 150px; object-fit: cover; float: left:">
-                </div>
-              </div>
+        <div class="row mt-3 pb-3">
+          <div class="col">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/<?=$latestvideoid?>?rel=0" title="YouTube video" allowfullscreen></iframe>
             </div>
           </div>
         </div>
       </div>
-    </section>  
+
+      <!-- ig -->
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="img/saya.png" class="rounded-circle img-thumbnail" width="200">
+          </div>
+          <div class="col-md-8">
+            <h5>Instagram</h5>
+            <h5>@harisluthfann</h5>
+            <p>250 Followers</p>
+          </div>
+        </div>
+        <div class="row mt-3 pb-3">
+          <div class="col-md-4">
+            <img src="img/ig1.png" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+          <div class="col-md-4">
+            <img src="img/ig2.png" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+          <div class="col-md-4">
+            <img src="img/ig3.png" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+        </div>
+      </div>
+
+    <div class="row justify-content-center mt-4">
+      <!-- gitHub -->
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="<?= $profileImageUrl; ?>" class="rounded-circle img-thumbnail" width="300">
+          </div>
+          <div class="col-md-8">
+            <h5>GitHub</h5>
+            <h5><a href="https://github.com/<?= $githubProfile; ?>" target="_blank"><?= $githubProfile; ?></a></h5>
+          </div>
+        </div>
+        <div class="row mt-3 pb-3">
+          <div class="col">
+            <h5>Latest GitHub Repository</h5>
+            <p><a href="<?= $latestRepoUrl; ?>" target="_blank"><?= $latestRepoName; ?></a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- linkedin -->
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="img/saya.png" class="rounded-circle img-thumbnail" width="300">
+          </div>
+          <div class="col-md-8">
+            <h5>LinkedIn</h5>
+            <h5><a href="https://www.linkedin.com/in/harisluthfan" target="_blank">harisluthfan</a></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 
     <!-- Contact -->
     <section class="contact" id="contact">
